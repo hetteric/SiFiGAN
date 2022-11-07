@@ -605,7 +605,7 @@ class Collater(object):
             assert len(x) * self.df_sample_rates[i] == len(dfs[i]) * self.sample_rate
 
 
-@hydra.main(version_base=None, config_path="config", config_name="train")
+@hydra.main(config_path="config", config_name="train")
 def main(config: DictConfig) -> None:
     """Run training process."""
 
@@ -624,6 +624,8 @@ def main(config: DictConfig) -> None:
     torch.manual_seed(config.seed)
     torch.cuda.manual_seed(config.seed)
     os.environ["PYTHONHASHSEED"] = str(config.seed)
+
+    config.out_dir = hydra.utils.to_absolute_path(config.out_dir)
 
     # check directory existence
     if not os.path.exists(config.out_dir):

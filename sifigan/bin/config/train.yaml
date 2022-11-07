@@ -8,9 +8,9 @@ defaults:
   - data: namine_ritsu
 
 hydra:
-  run:
-    dir: ./
-  output_subdir: null
+  # run:
+  #   dir: ./
+  # output_subdir: null
   job_logging:
     formatters:
       simple:
