@@ -40,6 +40,10 @@ matplotlib.use("Agg")
 logger = getLogger(__name__)
 
 
+def num_trainable_params(model):
+    parameters = filter(lambda p: p.requires_grad, model.parameters())
+    return sum([np.prod(p.size()) for p in parameters])
+
 class Trainer(object):
     """Customized trainer module for Source-Filter HiFiGAN training."""
 
@@ -708,6 +712,13 @@ def main(config: DictConfig) -> None:
         "generator": hydra.utils.instantiate(config.generator).to(device),
         "discriminator": hydra.utils.instantiate(config.discriminator).to(device),
     }
+
+    for name in model.keys():
+        logger.info(
+            f"[{name}] " + "Number of trainable params: {:.3f} million".format(
+                num_trainable_params(model[name]) / 1000000.0
+            )
+        )
 
     # define training criteria
     criterion = {
